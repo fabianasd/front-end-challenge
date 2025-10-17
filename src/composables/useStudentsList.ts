@@ -18,7 +18,7 @@ export function useStudentsList({ baseRoute }: Params) {
     { title: 'Registro Acadêmico', value: 'ra' },
     { title: 'Nome', value: 'fullName' },
     { title: 'CPF', value: 'cpf' },
-    { title: 'Ações', value: 'actions', sortable: false, align: 'light' as const },
+    { title: 'Ações', value: 'actions', sortable: false },
   ]
 
   const normalizedRows = computed<Student[]>(() =>

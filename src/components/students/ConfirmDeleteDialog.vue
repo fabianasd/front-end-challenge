@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const props = defineProps<{ modelValue: boolean; ra?: string; loading?: boolean }>();
-const emit = defineEmits<{ (e:'update:modelValue', v:boolean):void; (e:'confirm'):void }>();
+defineProps<{ modelValue: boolean; ra?: string; loading?: boolean }>()
+const emit = defineEmits<{ (e:'update:modelValue', v:boolean):void; (e:'confirm'):void }>()
 </script>
 
 <template>
