@@ -2,6 +2,7 @@
   <v-layout class="min-h-screen">
     <v-app-bar app color="white" elevation="0" flat location="top">
       <v-app-bar-title>+A Educação — Matrículas</v-app-bar-title>
+
     </v-app-bar>
     <v-navigation-drawer app permanent width="280" class="drawer-dark" elevation="0">
       <div class="drawer-header">
@@ -31,15 +32,8 @@
         <v-sheet class="search-sheet rounded-lg mb-4">
           <v-row class="align-center" no-gutters>
             <v-col cols="12" md="6" class="pr-md-4 mb-3 mb-md-0">
-              <v-text-field
-                v-model="q"
-                placeholder="Buscar por aluno (RA, nome, CPF)"
-                variant="outlined"
-                density="comfortable"
-                hide-details
-                class="search-input"
-                @keyup.enter="applySearch"
-              />
+              <v-text-field v-model="q" placeholder="Buscar por aluno (RA, nome, CPF)" variant="outlined"
+                density="comfortable" hide-details class="search-input" @keyup.enter="applySearch" />
             </v-col>
 
             <v-col cols="12" sm="auto" class="mb-3 mb-sm-0">
@@ -59,7 +53,7 @@
         <v-card class="rounded-lg overflow-hidden card-plain">
           <v-data-table :headers="headers" :items="filteredRows" :loading="loading" :items-per-page="10"
             class="rounded-b-lg">
-            <template #item.actions="{ item }">
+            <template #[itemActionsSlot]="{ item }">
               <div class="d-flex ga-2">
                 <v-btn size="small" class="btn-edit" @click="$router.push(routes.edit(rowFromSlot(item).ra))">
                   Editar
@@ -102,6 +96,7 @@ const routes = {
   create: `${baseRoute}/new`,
   edit: (ra: string) => `${baseRoute}/${encodeURIComponent(ra)}/edit`,
 }
+const itemActionsSlot = 'item.actions' as const
 
 const route = useRoute()
 
@@ -124,7 +119,6 @@ init(route)
 </script>
 
 <style scoped>
-
 .drawer-dark {
   background: #1f1f1f;
   color: #fff;

@@ -6,7 +6,7 @@ import path from 'node:path'
 export default defineConfig({
   plugins: [
     vue(),
-    vuetify({ autoImport: true }), // habilita a-la-carte/auto-import
+    vuetify({ autoImport: true }),
   ],
   resolve: {
     alias: {
