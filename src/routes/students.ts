@@ -2,7 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import StudentsListView from '@/views/students/StudentsListView.vue'
 import StudentFormView from '@/views/students/StudentFormView.vue'
 
-export const baseRoute = '/users' as const
+export const baseRoute = '/users'
+
+export const studentRoutePaths = {
+  list: baseRoute,
+  create: `${baseRoute}/new`,
+  edit: (ra: string) => `${baseRoute}/${encodeURIComponent(ra)}/edit`,
+} as const
 
 export const studentsRoutes = [
   {

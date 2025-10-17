@@ -1,7 +1,12 @@
 <template>
   <v-layout class="min-h-screen">
-    <v-app-bar app color="white" elevation="0" flat>
-      <v-app-bar-title>{{ title ?? '+A Educação — Matrículas' }}</v-app-bar-title>
+    <v-app-bar app color="white" elevation="0" flat class="app-bar">
+      <v-app-bar-title class="brand-title">
+        <slot name="brand">
+          {{ title ?? '+A Educação — Matrículas' }}
+        </slot>
+      </v-app-bar-title>
+      <v-spacer />
       <slot name="app-bar-actions" />
     </v-app-bar>
 
@@ -32,6 +37,17 @@ defineProps<{ title?: string }>()
 
 .layout-content {
   padding: 16px 32px 40px;
+}
+
+.app-bar {
+  padding-left: 8px;
+}
+
+.brand-title {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 @media (max-width: 960px) {

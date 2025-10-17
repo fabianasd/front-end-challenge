@@ -10,9 +10,35 @@ const emit = defineEmits<{ (e:'update:modelValue', v:boolean):void; (e:'confirm'
       <v-card-text>Tem certeza que deseja excluir o aluno {{ ra }}?</v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn variant="text" @click="emit('update:modelValue', false)">Cancelar</v-btn>
-        <v-btn color="error" @click="emit('confirm')" :loading="loading">Confirmar</v-btn>
+        <v-btn class="btn-cancel" variant="flat" @click="emit('update:modelValue', false)">
+          Cancelar
+        </v-btn>
+        <v-btn class="btn-confirm" @click="emit('confirm')" :loading="loading">
+          Confirmar
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
+
+<style scoped>
+.btn-cancel {
+  background: #eceff1;
+  color: #455a64;
+  font-weight: 600;
+}
+
+.btn-cancel:hover {
+  background: #cfd8dc;
+}
+
+.btn-confirm {
+  background: #e53935;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-confirm:hover {
+  background: #c62828;
+}
+</style>
