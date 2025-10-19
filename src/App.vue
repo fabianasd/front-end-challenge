@@ -7,20 +7,9 @@
 
       <v-spacer />
 
-      <v-menu
-        v-model="userMenu"
-        location="bottom end"
-        transition="fade-transition"
-        offset="12"
-      >
+      <v-menu v-model="userMenu" location="bottom end" transition="fade-transition" offset="12">
         <template #activator="{ props }">
-          <v-btn
-            v-bind="props"
-            class="user-btn"
-            aria-label="Perfil do usuário"
-            icon
-            variant="flat"
-          >
+          <v-btn v-bind="props" class="user-btn" aria-label="Perfil do usuário" icon variant="flat">
             <v-avatar size="40" color="#e0e0e0">
               <span class="user-btn__initial">{{ userInitial }}</span>
             </v-avatar>
@@ -28,28 +17,16 @@
         </template>
 
         <v-card class="user-card" elevation="12">
-          <header class="user-card__header">
-            <span class="user-card__email">{{ user.email }}</span>
-            <v-btn
-              icon="mdi-close"
-              variant="text"
-              density="comfortable"
-              class="user-card__close"
-              @click="userMenu = false"
-            />
-          </header>
+
+          <v-btn icon="mdi-close" variant="text" density="comfortable" class="user-card__close"
+            @click="userMenu = false" />
 
           <div class="user-card__profile">
             <div class="user-card__avatar">
               <v-avatar size="72" color="#0097a7">
                 <span>{{ userInitial }}</span>
               </v-avatar>
-              <v-btn
-                icon="mdi-camera-outline"
-                size="x-small"
-                class="user-card__avatar-edit"
-                variant="flat"
-              />
+              <v-btn icon="mdi-camera-outline" size="x-small" class="user-card__avatar-edit" variant="flat" />
             </div>
             <div class="user-card__greeting">{{ greeting }}</div>
           </div>
@@ -116,6 +93,7 @@ const greeting = computed(() => {
 }
 
 .user-card {
+  position: relative;
   min-width: 200px;
   max-width: 200px;
   background: #ffffff;
@@ -138,6 +116,9 @@ const greeting = computed(() => {
 }
 
 .user-card__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   color: #9aa0a6;
 }
 

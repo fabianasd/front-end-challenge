@@ -1,11 +1,50 @@
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import AcademicLayout from '@/layouts/AcademicLayout.vue'
+import StudentsNav from '@/components/students/StudentsNav.vue'
+import ConfirmDeleteDialog from '@/components/students/ConfirmDeleteDialog.vue'
+import { useStudentsList } from '@/composables/useStudentsList'
+import { baseRoute, studentRoutePaths } from '@/router'
+
+const routes = studentRoutePaths
+const itemActionsSlot = 'item.actions' as const
+
+const route = useRoute()
+
+const digitsOnly = (v: string) => v?.replace(/\D/g, '') ?? ''
+
+const formatCpf = (v: string) => {
+  const d = digitsOnly(v).slice(0, 11)
+  const p1 = d.slice(0, 3)
+  const p2 = d.slice(3, 6)
+  const p3 = d.slice(6, 9)
+  const p4 = d.slice(9, 11)
+  return [p1, p2, p3].filter(Boolean).join('.') + (p4 ? `-${p4}` : '')
+}
+
+const {
+  loading,
+  headers,
+  q,
+  filteredRows,
+  breadcrumbs,
+  del,
+  deleting,
+  confirmDelete,
+  doDelete,
+  rowFromSlot,
+  applySearch,
+  feedback,
+  init,
+} = useStudentsList()
+
+init()
+</script>
+
 <template>
-  <AcademicLayout title="+A Educação — Matrículas">
+  <AcademicLayout>
     <template #nav>
-      <StudentsNav
-        :routes="routes"
-        :active="route.path.startsWith(baseRoute)"
-        :current="route.path"
-      />
+      <StudentsNav :routes="routes" :active="route.path.startsWith(baseRoute)" :current="route.path" />
     </template>
 
     <v-breadcrumbs :items="breadcrumbs" class="breadcrumbs" divider=" / " />
@@ -13,16 +52,9 @@
     <v-sheet class="search-sheet rounded-lg mb-4">
       <v-row class="align-center" no-gutters>
         <v-col cols="12" md="6" class="pr-md-4 mb-3 mb-md-0">
-          <v-text-field
-            v-model="q"
-            placeholder="Buscar por aluno (RA, nome, CPF)"
-            variant="outlined"
-            density="comfortable"
-            hide-details
-            class="search-input"
-            prepend-inner-icon="mdi-magnify"
-            @keyup.enter="applySearch"
-          />
+          <v-text-field v-model="q" placeholder="Buscar por aluno (RA, nome, CPF)" variant="outlined"
+            density="comfortable" hide-details class="search-input" prepend-inner-icon="mdi-magnify"
+            @keyup.enter="applySearch" />
         </v-col>
 
         <v-col cols="12" sm="auto" class="ml-sm-auto">
@@ -34,15 +66,12 @@
     </v-sheet>
 
     <v-card class="card-plain rounded-lg overflow-hidden">
-      <v-data-table
-        :headers="headers"
-        :items="filteredRows"
-        :loading="loading"
-        :items-per-page="10"
-        items-per-page-text="Itens por página"
-        page-text="{0}-{1} de {2}"
-        class="rounded-b-lg"
-      >
+      <v-data-table :headers="headers" :items="filteredRows" :loading="loading" :items-per-page="10"
+        items-per-page-text="Itens por página" page-text="{0}-{1} de {2}" class="rounded-b-lg">
+        <!-- eslint-disable-next-line vue/valid-v-slot -->
+        <template #item.cpf="{ item }">
+          {{ formatCpf(rowFromSlot(item).cpf) }}
+        </template>
         <template #[itemActionsSlot]="{ item }">
           <div class="d-flex ga-2">
             <v-btn size="small" class="btn-edit" @click="$router.push(routes.edit(rowFromSlot(item).ra))">
@@ -67,38 +96,6 @@
     </v-snackbar>
   </AcademicLayout>
 </template>
-
-<script setup lang="ts">
-import { useRoute } from 'vue-router'
-import AcademicLayout from '@/layouts/AcademicLayout.vue'
-import StudentsNav from '@/components/students/StudentsNav.vue'
-import ConfirmDeleteDialog from '@/components/students/ConfirmDeleteDialog.vue'
-import { useStudentsList } from '@/composables/useStudentsList'
-import { baseRoute, studentRoutePaths } from '@/routes/students'
-
-const routes = studentRoutePaths
-const itemActionsSlot = 'item.actions' as const
-
-const route = useRoute()
-
-const {
-  loading,
-  headers,
-  q,
-  filteredRows,
-  breadcrumbs,
-  del,
-  deleting,
-  confirmDelete,
-  doDelete,
-  rowFromSlot,
-  applySearch,
-  feedback,
-  init,
-} = useStudentsList()
-
-init()
-</script>
 
 <style scoped>
 .breadcrumbs {

@@ -1,6 +1,6 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { studentRoutePaths } from '@/routes/students'
+import { studentRoutePaths } from '@/router'
 import { useStudentsStore } from '@/stores/students'
 import { createStudent, getStudentByRa, updateStudent } from '@/api/studentsAPI'
 import { matchesStudentRa, normalizeStudent } from '@/utils/student'

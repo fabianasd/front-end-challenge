@@ -3,7 +3,7 @@ import { useStudentsStore } from '@/stores/students'
 import { deleteStudent } from '@/api/studentsAPI'
 import type { Student } from '@/types/Student'
 import { normalizeStudent } from '@/utils/student'
-import { studentRoutePaths } from '@/routes/students'
+import { studentRoutePaths } from '@/router'
 
 type Feedback = {
   open: boolean
