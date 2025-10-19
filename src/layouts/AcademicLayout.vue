@@ -3,7 +3,7 @@
     <v-app-bar app color="white" elevation="0" flat class="app-bar">
       <v-app-bar-title class="brand-title">
         <slot name="brand">
-          {{ title ?? '+A Educação — Matrículas' }}
+          <span v-if="title">{{ title }}</span>
         </slot>
       </v-app-bar-title>
       <v-spacer />

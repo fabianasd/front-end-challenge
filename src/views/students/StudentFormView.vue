@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { baseRoute } from '@/routes/students'
+import { computed } from 'vue'
+import { baseRoute } from '@/router'
 import StudentsNav from '@/components/students/StudentsNav.vue'
 import AcademicLayout from '@/layouts/AcademicLayout.vue'
 import { useStudentForm } from '@/composables/useStudentForm'
@@ -16,10 +17,27 @@ const {
   save,
   cancel,
 } = useStudentForm()
+
+const digitsOnly = (v: string) => v.replace(/\D/g, '')
+
+const formatCpf = (v: string) => {
+  const d = digitsOnly(v).slice(0, 11)
+  const p1 = d.slice(0, 3)
+  const p2 = d.slice(3, 6)
+  const p3 = d.slice(6, 9)
+  const p4 = d.slice(9, 11)
+  return [p1, p2, p3].filter(Boolean).join('.') + (p4 ? `-${p4}` : '')
+}
+
+const cpfMasked = computed(() => formatCpf(form.cpf ?? ''))
+
+function onCpfInput(val: string) {
+  form.cpf = digitsOnly(val).slice(0, 11)
+}
 </script>
 
 <template>
-  <AcademicLayout title="+A Educação — Matrículas">
+  <AcademicLayout>
     <template #nav>
       <StudentsNav :routes="routes" :active="route.path.startsWith(baseRoute)"
         :current="isEdit ? route.path : routes.create" />
@@ -37,27 +55,27 @@ const {
         <v-form @submit.prevent="save">
           <v-row dense>
             <v-col cols="12">
-              <v-text-field v-model="form.fullName" label="Nome completo" placeholder="Nome completo"
-                variant="outlined" rounded="lg" :disabled="loading || saving" :error="!!errors.fullName"
+              <v-text-field v-model="form.fullName" label="Nome completo" placeholder="Nome completo" variant="outlined"
+                rounded="lg" :disabled="loading || saving" :error="!!errors.fullName"
                 :error-messages="errors.fullName ? [errors.fullName] : []" />
             </v-col>
 
             <v-col cols="12">
-              <v-text-field v-model="form.email" type="email" label="E-mail" placeholder="E-mail"
-                variant="outlined" rounded="lg" :disabled="loading || saving" :error="!!errors.email"
+              <v-text-field v-model="form.email" type="email" label="E-mail" placeholder="E-mail" variant="outlined"
+                rounded="lg" :disabled="loading || saving" :error="!!errors.email"
                 :error-messages="errors.email ? [errors.email] : []" />
             </v-col>
 
             <v-col cols="12" md="6">
-              <v-text-field v-model="form.ra" label="Registro Acadêmico (RA)" placeholder="Registro Acadêmico (RA)" variant="outlined"
-                rounded="lg" :disabled="isEdit || loading || saving" :error="!!errors.ra"
+              <v-text-field v-model="form.ra" label="Registro Acadêmico (RA)" placeholder="Registro Acadêmico (RA)"
+                variant="outlined" rounded="lg" :disabled="isEdit || loading || saving" :error="!!errors.ra"
                 :error-messages="errors.ra ? [errors.ra] : []" />
             </v-col>
 
             <v-col cols="12" md="6">
-              <v-text-field v-model="form.cpf" label="CPF" placeholder="CPF" variant="outlined" rounded="lg"
-                maxlength="14" :disabled="isEdit || loading || saving" :error="!!errors.cpf"
-                :error-messages="errors.cpf ? [errors.cpf] : []" />
+              <v-text-field :model-value="cpfMasked" @update:modelValue="onCpfInput" label="CPF" placeholder="CPF"
+                variant="outlined" rounded="lg" :disabled="isEdit || loading || saving" :error="!!errors.cpf"
+                :error-messages="errors.cpf ? [errors.cpf] : []" maxlength="14" inputmode="numeric" />
             </v-col>
           </v-row>
         </v-form>
