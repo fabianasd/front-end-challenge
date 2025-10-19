@@ -1,18 +1,23 @@
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import type { RouteLocationNormalizedLoaded } from 'vue-router'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useStudentsStore } from '@/stores/students'
 import { deleteStudent } from '@/api/studentsAPI'
 import type { Student } from '@/types/Student'
 import { normalizeStudent } from '@/utils/student'
+import { studentRoutePaths } from '@/routes/students'
 
-type Params = { baseRoute: string }
+type Feedback = {
+  open: boolean
+  message: string
+  color: 'success' | 'error'
+}
 
-export function useStudentsList({ baseRoute }: Params) {
+export function useStudentsList() {
   const store = useStudentsStore()
   const loading = computed(() => store.loading)
   const rows = computed<Student[]>(() => store.items)
-  const alunosOpen = ref(true)
   const q = ref('')
+  const deleting = ref(false)
+  const feedback = reactive<Feedback>({ open: false, message: '', color: 'success' })
 
   const headers = [
     { title: 'Registro Acadêmico', value: 'ra' },
@@ -36,7 +41,7 @@ export function useStudentsList({ baseRoute }: Params) {
   })
 
   const breadcrumbs = computed(() => [
-    { title: 'Alunos', disabled: false, to: baseRoute },
+    { title: 'Alunos', disabled: false, to: studentRoutePaths.list },
     { title: 'Lista de alunos', disabled: true },
   ])
 
@@ -48,10 +53,25 @@ export function useStudentsList({ baseRoute }: Params) {
   }
 
   async function doDelete() {
-    if (!del.ra) return
-    await deleteStudent(del.ra)
-    del.open = false
-    await store.fetchAll()
+    if (!del.ra || deleting.value) return
+    deleting.value = true
+    const ra = del.ra
+    try {
+      await deleteStudent(ra)
+      store.removeByRa(ra)
+      feedback.message = `Aluno ${ra} removido com sucesso.`
+      feedback.color = 'success'
+      feedback.open = true
+      del.open = false
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Falha ao excluir aluno'
+      feedback.message = message
+      feedback.color = 'error'
+      feedback.open = true
+    } finally {
+      deleting.value = false
+      del.ra = ''
+    }
   }
 
   function rowFromSlot(item: unknown): Student {
@@ -63,13 +83,12 @@ export function useStudentsList({ baseRoute }: Params) {
     q.value = q.value.trim()
   }
 
-  function init(route: RouteLocationNormalizedLoaded) {
-    watch(
-      () => route.path,
-      (p) => { if (p.startsWith(baseRoute)) alunosOpen.value = true },
-      { immediate: true },
-    )
-    onMounted(() => { void store.fetchAll() })
+  function init() {
+    onMounted(() => {
+      if (!store.items.length) {
+        void store.fetchAll()
+      }
+    })
   }
 
   return {
@@ -79,11 +98,12 @@ export function useStudentsList({ baseRoute }: Params) {
     filteredRows,
     breadcrumbs,
     del,
+    deleting,
     confirmDelete,
     doDelete,
     rowFromSlot,
-    alunosOpen,
     applySearch,
+    feedback,
     init,
   }
 }

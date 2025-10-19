@@ -3,7 +3,7 @@ import { listStudents } from '../api/studentsAPI'
 import type { Student } from '../types/Student'
 
 export const useStudentsStore = defineStore('users', {
-  state: () => ({ items: [] as Student[], loading: false, error: '' as string|undefined }),
+  state: () => ({ items: [] as Student[], loading: false, error: '' as string | undefined }),
   actions: {
     async fetchAll() {
       this.loading = true
@@ -15,6 +15,9 @@ export const useStudentsStore = defineStore('users', {
       } finally {
         this.loading = false
       }
+    },
+    removeByRa(ra: string) {
+      this.items = this.items.filter((student) => String(student.ra) !== String(ra))
     },
   },
 })
