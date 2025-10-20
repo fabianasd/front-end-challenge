@@ -44,13 +44,13 @@ npm run dev
 
 <table>
   <tr>
-    <td><img src="docs/screenshots/listagem-alunos.png" alt="Lista" width="420"></td>
-    <td><img src="docs/screenshots/editar-cadastro.png" alt="Home" width="420"></td>
-    <td><img src="docs/screenshots/cadastrar-aluno.png" alt="Lista" width="420"></td>
+    <td><img src="docs/screenshots/listar-alunos.png" alt="Listar" width="420"></td>
+    <td><img src="docs/screenshots/editar-cadastro.png" alt="Editar" width="420"></td>
+    <td><img src="docs/screenshots/cadastrar-aluno.png" alt="Cadastrar" width="420"></td>
 
   </tr>
   <tr>
-    <td align="Listagem"><em>Listagem</em></td>
+    <td align="Listar"><em>Listar</em></td>
     <td align="Editar"><em>Editar</em></td>
     <td align="Cadastrar"><em>Cadastrar</em></td>
   </tr>
