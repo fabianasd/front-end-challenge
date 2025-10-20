@@ -1,0 +1,10 @@
+services:
+  webvue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - VITE_API_BASE_URL=http://amais-api.fabiana.petrovick.work
+    restart: unless-stopped
