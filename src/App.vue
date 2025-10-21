@@ -7,7 +7,7 @@
 
       <v-spacer />
 
-      <v-menu v-model="userMenu" location="bottom end" transition="fade-transition" offset="12">
+      <v-menu v-if="auth.isAuthenticated" v-model="userMenu" location="bottom end" transition="fade-transition" offset="12">
         <template #activator="{ props }">
           <v-btn v-bind="props" class="user-btn" aria-label="Perfil do usuário" icon variant="flat">
             <v-avatar size="40" color="#e0e0e0">
@@ -33,7 +33,7 @@
 
           <v-divider class="user-card__divider" />
 
-          <v-btn class="user-card__logout" variant="text">
+          <v-btn class="user-card__logout" variant="text" @click="onLogout">
             Sair
           </v-btn>
         </v-card>
@@ -48,18 +48,21 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const userMenu = ref(false)
+const router = useRouter()
+const auth = useAuthStore()
 
-const user = {
-  name: 'John Doe'
+const displayName = computed(() => auth.user?.name || auth.user?.email || 'Usuário')
+const userInitial = computed(() => displayName.value.charAt(0).toUpperCase())
+const greeting = computed(() => `Olá, ${displayName.value.split(' ')[0]}!`)
+
+async function onLogout() {
+  await auth.logout()
+  router.push({ name: 'login' })
 }
-
-const userInitial = computed(() => user.name.charAt(0).toUpperCase())
-const greeting = computed(() => {
-  const first = user.name.split(' ')[0] ?? user.name
-  return `Olá, ${first}!`
-})
 </script>
 
 <style scoped>

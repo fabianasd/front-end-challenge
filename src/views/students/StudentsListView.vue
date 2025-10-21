@@ -5,6 +5,8 @@ import StudentsNav from '@/components/students/StudentsNav.vue'
 import ConfirmDeleteDialog from '@/components/students/ConfirmDeleteDialog.vue'
 import { useStudentsList } from '@/composables/useStudentsList'
 import { baseRoute, studentRoutePaths } from '@/router'
+import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue'
 
 const routes = studentRoutePaths
 const itemActionsSlot = 'item.actions' as const
@@ -39,6 +41,9 @@ const {
 } = useStudentsList()
 
 init()
+
+const auth = useAuthStore()
+const canCreate = computed(() => auth.user?.permissions?.includes('students:create'))
 </script>
 
 <template>
@@ -58,7 +63,7 @@ init()
         </v-col>
 
         <v-col cols="12" sm="auto" class="ml-sm-auto">
-          <v-btn color="success" class="btn-new" @click="$router.push(routes.create)">
+          <v-btn color="success" class="btn-new" @click="$router.push(routes.create)" :disabled="!canCreate">
             Cadastrar aluno
           </v-btn>
         </v-col>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { PropType } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
 type Routes = {
   list: string
@@ -28,6 +29,10 @@ const listActive = computed(() => {
 })
 
 const createActive = computed(() => props.current === props.routes.create)
+
+const auth = useAuthStore()
+const canRead = computed(() => auth.user?.permissions?.includes('students:read'))
+const canCreate = computed(() => auth.user?.permissions?.includes('students:create'))
 </script>
 
 <template>
@@ -45,10 +50,10 @@ const createActive = computed(() => props.current === props.routes.create)
         </template>
 
         <v-list-item prepend-icon="mdi-table-search" title="Consultar alunos" :to="routes.list" class="child-item"
-          :active="listActive" />
+          :active="listActive" :disabled="!canRead" />
 
         <v-list-item prepend-icon="mdi-plus-circle-outline" title="Cadastrar aluno" :to="routes.create"
-          class="child-item" :active="createActive" />
+          class="child-item" :active="createActive" :disabled="!canCreate" />
       </v-list-group>
     </v-list>
   </div>
