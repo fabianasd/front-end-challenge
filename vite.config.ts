@@ -8,6 +8,16 @@ export default defineConfig({
     vue(),
     vuetify({ autoImport: true }),
   ],
+  server: {
+    host: true,
+    port: Number(process.env.VITE_DEV_PORT || 5173),
+    strictPort: true,
+    watch: {
+      usePolling:
+        process.env.USE_POLLING === 'true' || process.env.CHOKIDAR_USEPOLLING === 'true',
+      interval: Number(process.env.POLLING_INTERVAL || 300),
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
