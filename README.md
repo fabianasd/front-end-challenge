@@ -1,3 +1,7 @@
+## Links úteis
+
+- [Acesso à aplicação](https://amais-fabiana.petrovick.work)
+
 ## Front-end (Vue 3 + Vuetify)
 
 Aplicação web para gestão de alunos (listagem, busca, criação/edição e remoção), construída em Vue 3 + TypeScript, Vuetify e Vite. O projeto segue organização por módulos (Students) e usa Pinia para estado, vue-router para rotas e Axios para integração com a API.
